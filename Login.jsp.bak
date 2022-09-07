@@ -1,0 +1,31 @@
+<%@ page language="java" import="java.sql.*" %>
+<%
+	String fname=request.getParameter("t1");
+	String fpass=request.getParameter("t2");
+	try{
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		Connection con=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","system","root");
+		Statement stmt=con.createStatement();
+		ResultSet rs=stmt.executeQuery("select * from customer");
+		int count=0;
+		while(rs.next()){
+			String dname=rs.getString(1);
+			String dpass=rs.getString(2);
+			if((fname.equals(dname))&&(fpass.equals(dpass))){
+				count++;
+				%>
+				<jsp:include page="Home.html" />
+				<%
+			}
+				
+		}
+		if(count==0){
+					out.println("NOT VALID USER");
+					out.println("<html><a href='Login.html' > Try again</a>");
+				}
+		//out.println("Name :"+fname);
+		//out.println("Name :"+fpass);
+	}catch(Exception e){
+		out.println("exception is :"+e);
+	}
+%>
